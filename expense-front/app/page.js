@@ -1,38 +1,62 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  let [categories, setCategories] = useState([]);
 
-  const [categories, setCategories] = useState([]);
-  
-  function loadList(){ƒ
+  function loadList() {
     fetch("http://localhost:4000/categories/list")
-    .then((res)=> res.json())
-    .then((data) => {
-    setCategories(data);
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories(data);
+      });
   }
 
   useEffect(() => {
     loadList();
   }, []);
 
-  function createNew(){
-    const name= propmt("Name...");
-    fetch(`http://localhost:4000/categories/create?nme=${name}`)
-    .then((res) => res.json())
-    .then(()=>{
-      loadList();
-    });
+  function createNew() {
+    const name = prompt("Name...");
+    fetch(`http://localhost:4000/categories/create?name=${name}`, {
+      method: "POST",
+      body: JSON.stringify({ name: name }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        loadList();
+      });
   }
 
+  function Delete() {
+    fetch(`http://localhost:4000//categories/delete`, {
+      method: "POST",
+      body: JSON.stringify({ name: name }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        loadList();
+      });
+  }
   return (
     <main>
-      <button onClick={createNew}>Add new</button>
-      {articles.map((article) => (
-        <div key={article.id}>{article.title}</div>
-      ))}      
+      <div>
+        <button onClick={createNew}>Add new</button>
+        {categories.map((category) => (
+          <div key={category.id}>
+            {category.name}
+            <button>Edit</button>
+            <button onClick={Delete} method="POST" className="btn btn-primary" formAction="/categories/delete">Delete</button>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
