@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { Input } from "@/components/ui/input";
 export default function Home() {
   let [categories, setCategories] = useState([]);
 
@@ -49,6 +49,20 @@ export default function Home() {
             <button onClick={Delete} method="POST" className="btn btn-primary" formAction="/categories/delete">Delete</button>
           </div>
         ))}
+
+    <div className="flex grid-cols-2">
+        <div className="bg-white">
+            <div></div>
+            <h1>Welcome Back
+                <p>Welcome back, Please enter your details</p>
+            </h1>
+            <Input placeholder="Email" type="email" className="mb-5"></Input>
+            <Input placeholder="Email" type="password" className="mb-5"></Input>
+            <button className="" >Log in</button>
+        </div>
+        <div className="bg-blue-400"></div>
+    </div>
+        
       </div>
     </main>
   );
