@@ -1,5 +1,5 @@
-// import bodyParser from "body-parser";
-// const __dirname = dirname(fileURLToPath(import.meta.url));
+import bodyParser from "body-parser";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
@@ -55,6 +55,33 @@ app.get("/articles", (req, res) => {
     { id: 1, title: "Hello,, sain uu" },
     { id: 2, title: "Hello" },
   ]);
+});
+
+
+var userIsAuthorised = false;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+function passwordCheck(req, res, next) {
+  const password = req.body["password"];
+  if (password === "ILoveProgramming") {
+    userIsAuthorised = true;
+  }
+  next();
+}
+app.use(passwordCheck);
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/expense-front/page.js");
+});
+
+app.post("/check", (req, res) => {
+  if (userIsAuthorised) {
+    res.sendFile(__dirname + "/expense-front/page.js");
+  } else {
+    res.sendFile(__dirname + "/expense-front/index.html");
+    //Alternatively res.redirect("/");
+  }
 });
 
 app.listen(port, () => {
