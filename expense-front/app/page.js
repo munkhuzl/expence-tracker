@@ -32,18 +32,11 @@ export default function Home() {
       });
   }
 
-  function Delete() {
-    fetch(`http://localhost:4000//categories/delete`, {
-      method: "POST",
-      body: JSON.stringify({ name: name }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        loadList();
-      });
+  function Delete(name) {
+    if(confirm("Are u sure?"))
+      {name.splice(name,1);
+    render();
+      }
   }
   return (
     <main>
@@ -52,7 +45,7 @@ export default function Home() {
         {categories.map((category) => (
           <div key={category.id}>
             {category.name}
-            <button>Edit</button>
+            <button >Edit</button>
             <button onClick={Delete} method="POST" className="btn btn-primary" formAction="/categories/delete">Delete</button>
           </div>
         ))}
