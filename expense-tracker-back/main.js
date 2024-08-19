@@ -1,49 +1,81 @@
-import bodyParser from "body-parser";
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// const __dirname = dirname(fileURLToPath(import.meta.url));
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
-const { dirname } = require("path");
-const { fileURLToPath } = require("url");
 const app = express();
-var bodyParser = require("body-parser");
 const port = 4000;
-
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+const { v4: uuidv4 } = require("uuid");
 app.use(express.json());
+app.use(cors());
 const content = fs.readFileSync("categories.json", "utf-8");
-const categories = JSON.parse(content);
+let categories = JSON.parse(content);
 
-app.get("/categories/list", (req, res) => {
+async function createNewCategory(form) {
+  const id = uuidv4();
+  form.id = id;
+  categories.push(form);
+  fs.writeFileSync("categories.json", JSON.stringify(categories));
+  return id;
+}
+
+function getCategories(){
+  const id = uuidv4();
+
+
+}
+
+function getOneCategory(id){
+  const id = createNewCategory();
+}
+
+
+
+
+
+
+
+//categories CRUD
+app.get("/categories", (req, res) => {
   res.json(categories);
 });
 
-app.post("/categories/create", (req, res) => {
-  const { name } = req.body;
-  categories.push({
-    id: new Date().toISOString(),
-    name: name,
-  });
-
-  fs.writeFileSync("data.json", JSON.stringify(content));
-  res.json(["Success"]);
+app.get("/categories/:id", (req, res) => {
+  const { id } = req.params;
+  const category = categories.find(cat.id === id);
+  res.json(category);
 });
 
-app.put("/categories/update", (req, res) => {
-  const { id: name } = req.query;
+app.post("/categories", async (req, res) => {
+  const { name } = req.body;
+  const id = await createNewCategory({ name });
+  res.status(201).json({ id });
+});
+
+app.put("/categories/: id ", (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  if (!name) {
+    res.status(400).json({ message: "`Name field is empty`" });
+    return;
+  }
   const index = categories.findIndex((cat) => cat.id === id);
   categories[index].name = name;
-  fs.writeFileSync("data.json", JSON.stringify(categories));
+  fs.writeFileSync("categories.json", JSON.stringify(categories));
   res.json(["Success"]);
 });
 
-app.get("/categories/delete", (req, res) => {
-  const { id } = req.query;
-  categories = categories.filter((cat) => cachedDataVersionTag.id !== id);
-  fs.writeFileSync("data.json", JSON.stringify(content));
-  res.json(["Success"]);
+app.delete("/categories/:id", (req, res) => {
+  const { id } = req.params;
+  const deleteIndex = categories.findIndex((cat) => cat.id === id);
+
+  if (deleteIndex < 0) {
+    res.sendStatus(204);
+    return;
+  }
+  categories = categories.filter((cat) => cat.id !== id);
+  fs.writeFileSync("categories.json", JSON.stringify(categories));
+  res.sendStatus(204);
 });
 
 app.get("/", (req, res) => {
@@ -57,33 +89,28 @@ app.get("/articles", (req, res) => {
   ]);
 });
 
-
-var userIsAuthorised = false;
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-function passwordCheck(req, res, next) {
-  const password = req.body["password"];
-  if (password === "ILoveProgramming") {
-    userIsAuthorised = true;
-  }
-  next();
-}
-app.use(passwordCheck);
-
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/expense-front/page.js");
-});
-
-app.post("/check", (req, res) => {
-  if (userIsAuthorised) {
-    res.sendFile(__dirname + "/expense-front/page.js");
-  } else {
-    res.sendFile(__dirname + "/expense-front/index.html");
-    //Alternatively res.redirect("/");
-  }
-});
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+// function passwordCheck(req, res, next) {
+//   const password = req.body["password"];
+//   if (password === "ILoveProgramming") {
+//     userIsAuthorised = true;
+//   }
+//   next();
+// }
+// app.use(passwordCheck);
+
+// app.get("/", (req, res) => {
+//   res.sendFile(__dirname + "/expense-front/page.js");
+// });
+
+// app.post("/check", (req, res) => {
+//   if (userIsAuthorised) {
+//     res.sendFile(__dirname + "/expense-front/page.js");
+//   } else {
+//     res.sendFile(__dirname + "/expense-front/index.html");
+//     //Alternatively res.redirect("/");
+//   }
+// });
