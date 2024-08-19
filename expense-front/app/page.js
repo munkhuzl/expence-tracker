@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+
+
 export default function Home() {
-  let [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   function loadList() {
-    fetch("http://localhost:4000/categories/list")
+    fetch(`http://localhost:4000/categories`)
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);
@@ -17,9 +21,20 @@ export default function Home() {
     loadList();
   }, []);
 
+  function handDelete(id) {
+    fetch(`http://localhost:4000/categories/${id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      if (res.status === 404) {
+        alert("Category not found");
+      }
+      loadList();
+    });
+  }
+
   function createNew() {
     const name = prompt("Name...");
-    fetch(`http://localhost:4000/categories/create?name=${name}`, {
+    fetch(`http://localhost:4000/categories`, {
       method: "POST",
       body: JSON.stringify({ name: name }),
       headers: {
@@ -27,42 +42,47 @@ export default function Home() {
       },
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         loadList();
       });
   }
 
-  function Delete(name) {
-    if(confirm("Are u sure?"))
-      {name.splice(name,1);
-    render();
-      }
-  }
   return (
-    <main>
-      <div>
-        <button onClick={createNew}>Add new</button>
-        {categories.map((category) => (
-          <div key={category.id}>
-            {category.name}
-            <button >Edit</button>
-            <button onClick={Delete} method="POST" className="btn btn-primary" formAction="/categories/delete">Delete</button>
-          </div>
-        ))}
+    <main className="">
+      <div className="flex grid-cols-2 mb-20">
+        <div className="mx-auto">
+          <Button onClick={createNew}>Add new</Button>
+          {categories.map((category) => (
+            <div key={category.name}>
+              {category.name}
+              <Button>Edit</Button>
+              <Button
+                onClick={() => handDelete(category.id)}
+              >
+                Delete
+              </Button>
+            </div>
+          ))}
 
-    <div className="flex grid-cols-2">
-        <div className="bg-white">
-            <div></div>
-            <h1>Welcome Back
-                <p>Welcome back, Please enter your details</p>
+          <div className="bg-stone-50 mx-auto">
+            <h1>
+              Welcome Back
+              <p>Welcome back, Please enter your details</p>
             </h1>
-            <Input placeholder="Email" type="email" className="mb-5"></Input>
-            <Input placeholder="Email" type="password" className="mb-5"></Input>
-            <button className="" >Log in</button>
+            <Input
+              placeholder="Enter your email"
+              type="email"
+              className="mb-5 mt-4"
+            ></Input>
+            <Input
+              placeholder="Enter your password"
+              type="password"
+              className="mb-5"
+            ></Input>
+            <Button className="mx">Log in</Button>
+          </div>
+          <div className="bg-blue-600"></div>
         </div>
-        <div className="bg-blue-400"></div>
-    </div>
-        
       </div>
     </main>
   );
