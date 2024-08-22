@@ -1,10 +1,11 @@
 const fs = require("fs");
-const {v4: uuidv4} = require("uuid");
-const {sql} = require("../configs/database");
+const { v4: uuidv4 } = require("uuid");
+const { sql } = require("../configs/database");
 
 async function createCategory({ name }) {
   const id = uuidv4();
-  await sql`insert into category (id, name) values (${id} ${name})`;
+  // await sql`insert into category (id, name) values (${id} ${name})`;
+  await sql`INSERT INTO category (id, name) VALUES (${id}, ${name})`;
   return id;
 }
 
@@ -13,18 +14,24 @@ function getCategories() {
   return list;
 }
 
-// function deleteCategory(id) {
-//   // const { id } = req.params;
-//   const deleteIndex = categories.findIndex((cat) => cat.id === id);
-//   if (deleteIndex < 0) {
-//     res.sendStatus(204);
-//     return;
-//   }
-//   categories = categories.filter((cat) => cat.id !== id);
-//   fs.writeFileSync("data/categories.json", JSON.stringify(categories));
-//   res.sendStatus(204);
-// }
+async function getOneCategory(id) {
+  const list = await sql`select * from category where id=${id}`;
+  if (list.length) {
+    return list[0];
+  }
+  return null;
+}
+async function deleteOneCatetory(id) {
+  await sql`delete from category where id=${id}`;
+}
+
+async function updateOnecategory(id, update) {
+  await sql`update category set name = ${update.name} wheree id=${id}`;
+}
 module.exports = {
-  getCategories,
   createCategory,
+  getCategories,
+  getOneCategory,
+  deleteOneCatetory,
+  updateOnecategory,
 };

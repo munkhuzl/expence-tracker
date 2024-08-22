@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-
-
 export default function Home() {
   const [categories, setCategories] = useState([]);
 
@@ -50,25 +48,21 @@ export default function Home() {
   return (
     <main className="">
       <div className="flex grid-cols-2 mb-20">
-        <div className="mx-auto">
+        <div className="mx-auto p-10 m-10">
           <Button onClick={createNew}>Add new</Button>
           {categories.map((category) => (
             <div key={category.name}>
               {category.name}
-              <Button>Edit</Button>
-              <Button
-                onClick={() => handDelete(category.id)}
-              >
+              <Button className="ml-10">Edit</Button>
+              <Button className="ml-3" onClick={() => handDelete(category.id)}>
                 Delete
               </Button>
             </div>
           ))}
 
-          <div className="bg-stone-50 mx-auto">
-            <h1>
-              Welcome Back
-              <p>Welcome back, Please enter your details</p>
-            </h1>
+          <div className="bg-stone-50 mx-auto mt-16">
+            <h1 className="font-bold">Welcome Back</h1>
+            <p className="">Welcome back, Please enter your details</p>
             <Input
               placeholder="Enter your email"
               type="email"
