@@ -46,9 +46,9 @@ export default function Home() {
   }
 
   return (
-    <main className="">
+    <main className="bg-slate-50 flex grid-cols-2">
       <div className="flex grid-cols-2 mb-20">
-        <div className="mx-auto p-10 m-10">
+        <div className="mx-auto p-10 m-10 ">
           <Button onClick={createNew}>Add new</Button>
           {categories.map((category) => (
             <div key={category.name}>
@@ -59,8 +59,7 @@ export default function Home() {
               </Button>
             </div>
           ))}
-
-          <div className="bg-stone-50 mx-auto mt-16">
+          <div className="bg-slate-50 mx-auto mt-16">
             <h1 className="font-bold">Welcome Back</h1>
             <p className="">Welcome back, Please enter your details</p>
             <Input
@@ -75,9 +74,10 @@ export default function Home() {
             ></Input>
             <Button className="mx">Log in</Button>
           </div>
-          <div className="bg-blue-600"></div>
         </div>
+        <div className="bg-blue-900"></div>
       </div>
+      <div className="bg-blue-600 w-1/2"></div>
     </main>
   );
 }

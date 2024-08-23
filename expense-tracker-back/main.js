@@ -1,6 +1,5 @@
 const { sql } = require("./configs/database");
 const { app } = require("./configs/basic");
-
 const {
   getCategories,
   createCategory,
@@ -30,12 +29,14 @@ app.post("/categories", async (req, res) => {
   res.status(201).json({ id });
 });
 
-app.delete("/categories"),
+app.delete("/categories/:id"),
   async (req, res) => {
     const { id } = req.params;
+    console.log("ID", id);
     const one = await deleteOneCatetory(id);
     res.sendStatus(204);
   };
+
 app.put("/categories/:id", async (req, res) => {
   const { id } = req.params;
   const input = req.body;
