@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,36 +22,40 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
-import { House, Icon } from "lucide-react";
+} from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
+import { Home, House, Icon } from "lucide-react";
 
-const categoryColors =[
+const categoryColors = [
   {
     name: "blue",
-    value: "#0166FF"
+    value: "#0166FF",
   },
   {
     name: "sky",
-    value: "#3D85C6"
+    value: "#3D85C6",
   },
-]
-const categoryIcons =[
+];
+const categoryIcons = [
   {
     name: "house",
     Icon: House,
   },
-  // {
-  //   name: "sky",
-  //   Icon:,
-  // },
-]
+  {
+    name: "sky",
+    Icon: Home,
+  },
+];
 export default function Page() {
   return (
     <>
       <Dialog>
-        <Card className="w-[792px] mx-auto mt-[200px] " >
-          <CardContent >
+        <Card className="w-[792px] mx-auto mt-[200px] ">
+          <CardContent>
             <CardTitle className="m-4">Add record</CardTitle>
             <hr></hr>
             <form className=" flex grid-cols-2 mb-4">
@@ -64,8 +68,14 @@ export default function Page() {
                 <Label htmlFor="category " className="mb-2">
                   Category
                   <div className="bg-slate-50 w-[220px]">
-                    <DropdownMenu placeholder="Find or choose category" className="">
-                      <DropdownMenuTrigger className="flex justify-end" > Tap</DropdownMenuTrigger>
+                    <DropdownMenu
+                      placeholder="Find or choose category"
+                      className=""
+                    >
+                      <DropdownMenuTrigger className="flex justify-end">
+                        {" "}
+                        Tap
+                      </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DropdownMenuLabel>Home</DropdownMenuLabel>
                         <DropdownMenuSeparator />
@@ -81,13 +91,11 @@ export default function Page() {
                 <Input></Input>
               </div>
               <div className="mt-4 w-1/2">
-                <Label htmlFor="Payee" className="mt-2" >
+                <Label htmlFor="Payee" className="mt-2">
                   Payee
                 </Label>
                 <Textarea placeholder="Type your message here."></Textarea>
-                <Label htmlFor="Note" >
-                  Note
-                </Label>
+                <Label htmlFor="Note">Note</Label>
                 <Textarea placeholder="Type your message here."></Textarea>
               </div>
             </form>
@@ -96,56 +104,51 @@ export default function Page() {
       </Dialog>
 
       <Addcategory2 />
-
     </>
-  )
+  );
 }
 export function Addcategory2() {
   return (
     <>
+      <Button variant="secondary">Add new category</Button>
       <Dialog open={true}>
-        <DialogTrigger asChild>
-          <Button variant="primary" style="mx-auto">Add</Button>
-        </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add record</DialogTitle>
             <hr className="mt-2"></hr>
           </DialogHeader>
-          <Button>
+          <div className="flex gap-1">
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="secondary" >
-                  <House /> 
+                <Button variant="secondary">
+                  <House />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-88">
-                <div>
-                <div className="grid grid-cols-6">
-                            {categoryIcon.map(({name, Icon})=>
-                            <div key={name}>
-                              <Icon/>
-                              </div>
-                            )};
-                          </div>
+              <PopoverContent className="w-80">
+                <div className="grid grid-cols-6 gap-2 " style="bg-white">
+                  {categoryIcons.map(({ name, Icon }) => (
+                    <div key={name}>
+                      <Icon />
+                    </div>
+                  ))}
                 </div>
-           
+
               </PopoverContent>
             </Popover>
-          </Button>
-          <div className="flex">
-
+            <Input></Input>
           </div>
 
-
-
+          <div className="flex"></div>
           <DialogFooter>
-            <Button type="submit">Add</Button>
+            <Button
+              type="submit"
+              className="w-full rounded-full bg-green-400 hover:bg-green-900"
+            >
+              Add
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-
     </>
-  )
+  );
 }
