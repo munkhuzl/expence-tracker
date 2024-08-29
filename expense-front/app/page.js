@@ -31,10 +31,9 @@ export default function Home() {
   }
 
   function createNew() {
-    const name = prompt("Name...");
     fetch(`http://localhost:4000/categories`, {
       method: "POST",
-      body: JSON.stringify({ name: name }),
+      body: JSON.stringify({ name: name, color: color, icon: icon }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
@@ -81,3 +80,4 @@ export default function Home() {
     </main>
   );
 }
+
