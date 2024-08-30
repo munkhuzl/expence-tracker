@@ -39,7 +39,9 @@ app.delete("/categories/:id"),
 
 app.put("/categories/:id", async (req, res) => {
   const { id } = req.params;
-  const input = req.body;
-  await updateOnecategory(id, input);
+  const name = req.body;
+  const icon = req.body;
+  const color = req.body;
+  await updateOnecategory(id, {name, icon, color});
   res.sendStatus(204);
 });
