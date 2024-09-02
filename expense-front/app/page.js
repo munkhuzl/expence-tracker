@@ -30,10 +30,10 @@ import {
 import { Circle, CircleUser, Clock, Home, House, Icon, Volume, Wallpaper, ChevronDown, HomeIcon, Gift, FolderOpenDot, Wine, CarTaxiFront, Shirt, CalendarIcon, Check} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@radix-ui/react-select";
-import { format } from "date-fns"
+// import { format } from "date-fns"
 
 import { cn } from "@/lib/utils"
-
+// import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import { Calendar } from "@/components/ui/calendar"
 
 export function Page() {
@@ -183,6 +183,7 @@ export default function Page2() {
   useEffect(() => {
     loadList();
   }, []);
+
   function handDelete(id) {
     fetch(`http://localhost:4000/categories/${id}`, {
       method: "DELETE",
@@ -195,9 +196,10 @@ export default function Page2() {
   }
 
   function createNew() {
+    const [name, colors, icon] = prompt("Name..")
     fetch(`http://localhost:4000/categories`, {
       method: "POST",
-      body: JSON.stringify({ name: name, colors: colors, icon: icon }),
+      body: JSON.stringify({name: name , colors: colors, icon: icon }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
@@ -325,6 +327,7 @@ export function Addcategory2() {
   const [name, setName] = useState("");
   return (
     <>
+    
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="secondary" onClick={() => setOpen(true)}>Add new category</Button>
@@ -344,7 +347,7 @@ export function Addcategory2() {
               </PopoverTrigger>
               <PopoverContent className="w-80">
                 <div className="grid grid-cols-6 gap-2 bg-white" >
-                  {categoryIcons.map(({ name, Icon }) => (
+                  {categoryIcons.map(({ name, icon }) => (
                     <div key={name} onClick={()=>setIcon(name)} className={`flex items-center justify-center w-8 h-8 ${icon === name ? "bg-blue-200" : ""}`}>
                       <Icon />
                     </div>
