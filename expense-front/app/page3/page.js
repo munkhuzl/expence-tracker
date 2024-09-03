@@ -2,7 +2,6 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
 import { BarChart, Plus, TrendingUp } from "lucide-react"
 import Page2 from "../page"
 import { Button } from "@/components/ui/button"
@@ -34,23 +33,6 @@ export default function Page3() {
         </>
     )
 }
-const cardContent = [
-    {
-        CardTitle: "Geld",
-        CardDescription: "Cash",
-        CardContent: "10,000,00"
-    },
-    {
-        CardTitle: "Your Income",
-        CardDescription: "Cash",
-        CardContent: "10,000,00"
-    },
-    {
-        CardTitle: "Geld",
-        CardDescription: "Cash",
-        CardContent: "10,000,00"
-    },
-]
 
 export function HomeBody() {
 

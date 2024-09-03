@@ -21,7 +21,6 @@ async function getOneCategory(id) {
   return null;
 }
 async function deleteOneCatetory(id) {
-  console.log("delete id: ", id);
   await sql`delete from category where id=${id}`;
 }
 
