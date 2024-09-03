@@ -53,7 +53,8 @@ import { cn } from "@/lib/utils";
 // import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import Page3 from "./page3/page";
-import e from "cors";
+import { Slider } from "@/components/ui/slider"
+
 import { set } from "react-hook-form";
 
 const categoryColors = [
@@ -185,6 +186,7 @@ export default function Page2() {
   const [icon, setIcon] = useState("home");
   const [color, setColor] = useState("blue");
   const [editingCategory, setEditingCategory]= useState([]);
+  const [transaction, setTransaction] = useState([]);
 
   function loadList() {
     fetch(`http://localhost:4000/categories`)
@@ -259,23 +261,30 @@ function updateCategory() {
   },[editingCategory])
 
   return (
-    <main>
+    <main className="" >
       <Page3 />
-      <div className="w-[402px] mt-14 ml-10 rounded-sm border-black border-2 gap-6 ">
+      <div className="flex gap-10">
+
+      
+    <aside className="">
+      <div className="w-[402px] mt-14 ml-10 rounded-sm border-2 gap-6 ">
         <div className=" grid-cols-2 mb-20 ">
           <div className="mx-auto p-10">
             {" "}
             <h1 className="font-bold mb-5">Records</h1>
-            <Input placeholder="search" className="mb-5"></Input>
+          <Button variant="secondary" onClick={() => setOpen(true)}>
+                  Add new category
+                </Button>
+            <Input placeholder="search" className=""></Input>
             <div className="mt-14 rounded-sm border-black border-1 mb-2 pb-2">
+              <h1 className="font-bold my-4">Category</h1>
               {categories.map((category) => (
                 <div key={category.name} className="flex gap-2">
-                  <CalendarIcon
+                  <CategoryIcon
                     iconName={category.icon}
                     color={category.color}
                   />
-                  {category.name}
-                  
+                  {category.name}      
                   <Button onClick={() => setEditingCategory(category)}>
                     Edit
                   </Button>
@@ -285,13 +294,14 @@ function updateCategory() {
                 </div>
               ))}
             </div>
+            
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="secondary" onClick={() => setOpen(true)}>
                   Add new category
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-[780]">
+              <DialogContent className="sm:max-w-[700px] rounded-lg">
                 <hr></hr>
                 <form className=" flex grid-cols-2 mb-4 gap-3">
                   <div className="m-4 w-1/2 ">
@@ -344,7 +354,7 @@ function updateCategory() {
                                   </PopoverTrigger>
                                   <PopoverContent className="w-80">
                                     <div className="grid grid-cols-6 gap-2 bg-white">
-                                      {categoryIcons.map(({ name, icon }) => (
+                                      {categoryIcons.map(({ name, Icon }) => (
                                         <div
                                           key={name}
                                           onClick={() => setIcon(name)}
@@ -450,14 +460,36 @@ function updateCategory() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+            <h1 className="font-bold my-4">Amount Range</h1>
+            <Slider defaultValue={[33]} max={100} step={1} />
+
           </div>
         </div>
       </div>
+      </aside>
+
+      <div className="mt-14 rounded-sm border-black border-1 mb-2 pb-2">
+              <h1 className="font-bold my-4">Today </h1>
+              <div>
+
+              </div>
+              {transaction.map((transaction) => (
+                <div key={transaction.name} className="flex font-bold gap-2">
+                  <transactionIcon
+                    iconName={category.icon}
+                    color={category.color}
+                  />
+                  {transaction.name}      
+                </div>
+              ))}
+            </div>
+       
+            </div>
     </main>
   );
 }
 
-function CategoryIcon({ iconName, color }) {
+export function CategoryIcon({ iconName, color }) {
   const iconObject = categoryIcons.find((item) => item.name === iconName);
   const colorObject = categoryColors.find((item) => item.name === color);
   if (!iconObject) {
@@ -470,38 +502,52 @@ function CategoryIcon({ iconName, color }) {
   } else {
     hexColor = colorObject.value;
   }
-  const [Icon] = iconObject;
+  const {Icon} = iconObject;
 
   return <Icon style={{ color: hexColor }} />;
 }
 
 export function DatePicker() {
-  const [date, setDate] = useState();
+  const [date, setDate] = useState('');
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-[240px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 bg-white" align="start">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          initialFocus
-          className={"b border rounded-lg w-1/2"}
-        />
-      </PopoverContent>
-    </Popover>
+    <PopoverTrigger asChild>
+      <Button
+        variant={"outline"}
+        className={cn(
+          "w-[240px] justify-start text-left font-normal",
+          !date && "text-muted-foreground"
+        )}
+      >
+        <CalendarIcon className="mr-2 h-4 w-4" />
+        {date ? format(date, "PPP") : <span>Pick a date</span>}
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent
+      align="start"
+      className="flex w-auto flex-col space-y-2 p-2"
+    >
+      <Select
+        onValueChange={(value) =>
+          setDate(addDays(new Date(), parseInt(value)))
+        }
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Select" />
+        </SelectTrigger>
+        <SelectContent position="popper">
+          <SelectItem value="0">Today</SelectItem>
+          <SelectItem value="1">Tomorrow</SelectItem>
+          <SelectItem value="3">In 3 days</SelectItem>
+          <SelectItem value="7">In a week</SelectItem>
+        </SelectContent>
+      </Select>
+      <div className="rounded-md border">
+        <Calendar mode="single" selected={date} onSelect={setDate} />
+      </div>
+    </PopoverContent>
+  </Popover>
   );
 }
 
