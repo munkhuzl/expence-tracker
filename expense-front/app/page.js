@@ -200,17 +200,6 @@ export default function Page2() {
     loadList();
   }, []);
 
-  function loadList() {
-    fetch(`http://localhost:4000/categories`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data);
-      });
-  }
-  useEffect(() => {
-    loadList();
-  }, []);
-
   function reset() {
     setName('');
     setColor('blue');
@@ -268,23 +257,23 @@ export default function Page2() {
     }
   }, [editingCategory])
 
-  function transactionLoadList() {
-    fetch(`http://localhost:4000/transaction`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTransaction(data);
-      });
-  }
-  useEffect(() => {
-    loadList();
-  }, []);
+  // function transactionLoadList() {
+  //   fetch(`http://localhost:4000/transaction`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setTransaction(data);
+  //     });
+  // }
+  // useEffect(() => {
+  //   loadList();
+  // }, []);
 
-  useEffect(() => {
-    transactionLoadList();
-  }, []);
+  // useEffect(() => {
+  //   transactionLoadList();
+  // }, []);
 
 
-  console.log({ transaction });
+  // console.log({ transaction });
   return (
     <main className="" >
       <Page3 />
@@ -483,8 +472,7 @@ export default function Page2() {
                   </DialogContent>
                 </Dialog>
                 <h1 className="font-bold my-4">Amount Range</h1>
-                <Slider defaultValue={[33]} max={100} step={1} />
-
+             
               </div>
             </div>
           </div>
@@ -571,4 +559,3 @@ export function DatePicker() {
   );
 }
 
-export function newCategory() { }
