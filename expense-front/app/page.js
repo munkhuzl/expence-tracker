@@ -47,15 +47,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@radix-ui/react-select";
-// import { format } from "date-fns"
-
 import { cn } from "@/lib/utils";
-// import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import Page3 from "./page3/page";
-import { Slider } from "@/components/ui/slider"
-
-import { set } from "react-hook-form";
 import HomebodySelect from "@/components/selector";
 
 const categoryColors = [
@@ -187,7 +181,7 @@ export default function Page2() {
   const [icon, setIcon] = useState("home");
   const [color, setColor] = useState("blue");
   const [editingCategory, setEditingCategory] = useState([]);
-  const [transaction, setTransaction] = useState([]);
+  const [transactions, setTransaction] = useState([]);
 
   function loadList() {
     fetch(`http://localhost:4000/categories`)
@@ -201,9 +195,9 @@ export default function Page2() {
   }, []);
 
   function reset() {
-    setName('');
-    setColor('blue');
-    setIcon('home');
+    setName("");
+    setColor("blue");
+    setIcon("home");
   }
 
   function createNew() {
@@ -214,12 +208,10 @@ export default function Page2() {
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
-    })
-
-      .then(() => {
-        loadList();
-        reset();
-      });
+    }).then(() => {
+      loadList();
+      reset();
+    });
   }
   function updateCategory() {
     setLoading(true);
@@ -229,12 +221,11 @@ export default function Page2() {
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
-    })
-      .then(() => {
-        loadList();
-        setOpen(false);
-        reset();
-      });
+    }).then(() => {
+      loadList();
+      setOpen(false);
+      reset();
+    });
   }
   function handDelete(id) {
     fetch(`http://localhost:4000/categories/${id}`, {
@@ -255,27 +246,28 @@ export default function Page2() {
       setColor(editingCategory.color);
       reset();
     }
-  }, [editingCategory])
+  }, [editingCategory]);
 
-  // function transactionLoadList() {
-  //   fetch(`http://localhost:4000/transaction`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setTransaction(data);
-  //     });
-  // }
-  // useEffect(() => {
-  //   loadList();
-  // }, []);
+  function createNewTransaction() {
+    setTransaction(true);
+    fetch(`http://localhost:4000/transactions`, {
+      method: "POST",
+      body: JSON.stringify({
+        name: name,
+        type: type,
+        note: note,
+        payee: payee,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then(() => {
+      reset();
+    });
+  }
 
-  // useEffect(() => {
-  //   transactionLoadList();
-  // }, []);
-
-
-  // console.log({ transaction });
   return (
-    <main className="" >
+    <main className="">
       <Page3 />
       <div className="flex gap-10">
         <aside className="">
@@ -284,9 +276,12 @@ export default function Page2() {
               <div className="mx-auto p-10">
                 {" "}
                 <h1 className="font-bold mb-5">Records</h1>
-                <Button variant="secondary" onClick={() => setOpen(true)}>
-                  Add new category
-                </Button>
+                {/* <Button
+                  variant="secondary"
+                  onClick={() => setTransaction(true)}
+                >
+                  add new {createNewTransaction}
+                </Button> */}
                 <Input placeholder="search" className=""></Input>
                 <div className="mt-14 rounded-sm border-black border-1 mb-2 pb-2">
                   <h1 className="font-bold my-4">Category</h1>
@@ -306,7 +301,6 @@ export default function Page2() {
                     </div>
                   ))}
                 </div>
-
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="secondary" onClick={() => setOpen(true)}>
@@ -366,31 +360,40 @@ export default function Page2() {
                                       </PopoverTrigger>
                                       <PopoverContent className="w-80">
                                         <div className="grid grid-cols-6 gap-2 bg-white">
-                                          {categoryIcons.map(({ name, Icon }) => (
-                                            <div
-                                              key={name}
-                                              onClick={() => setIcon(name)}
-                                              className={`flex items-center justify-center w-8 h-8 ${icon === name ? "bg-blue-200" : ""
+                                          {categoryIcons.map(
+                                            ({ name, Icon }) => (
+                                              <div
+                                                key={name}
+                                                onClick={() => setIcon(name)}
+                                                className={`flex items-center justify-center w-8 h-8 ${
+                                                  icon === name
+                                                    ? "bg-blue-200"
+                                                    : ""
                                                 }`}
-                                            >
-                                              <Icon />
-                                            </div>
-                                          ))}
+                                              >
+                                                <Icon />
+                                              </div>
+                                            )
+                                          )}
                                         </div>
                                         <hr></hr>
                                         <div className="grid grid-cols-7 bg-white">
-                                          {categoryColors.map(({ name, value }) => (
-                                            <div
-                                              key={name}
-                                              onClick={() => setColor(name)}
-                                              className="h-7 w-7 mt-3 text-white flex rounded-full justify-center items-center m-2 "
-                                              style={{ backgroundColor: value }}
-                                            >
-                                              {color === name && (
-                                                <Check className="w-4 h-4" />
-                                              )}
-                                            </div>
-                                          ))}
+                                          {categoryColors.map(
+                                            ({ name, value }) => (
+                                              <div
+                                                key={name}
+                                                onClick={() => setColor(name)}
+                                                className="h-7 w-7 mt-3 text-white flex rounded-full justify-center items-center m-2 "
+                                                style={{
+                                                  backgroundColor: value,
+                                                }}
+                                              >
+                                                {color === name && (
+                                                  <Check className="w-4 h-4" />
+                                                )}
+                                              </div>
+                                            )
+                                          )}
                                         </div>
                                         <hr></hr>
                                       </PopoverContent>
@@ -416,7 +419,8 @@ export default function Page2() {
                               </Dialog>
 
                               <SelectItem className="flex gap-2">
-                                <HomeIcon className="text-blue-500"></HomeIcon> Home
+                                <HomeIcon className="text-blue-500"></HomeIcon>{" "}
+                                Home
                                 <ChevronDown className=" h-4 w-4 " />
                               </SelectItem>
                               <SelectItem className="flex gap-2">
@@ -472,25 +476,46 @@ export default function Page2() {
                   </DialogContent>
                 </Dialog>
                 <h1 className="font-bold my-4">Amount Range</h1>
-             
               </div>
             </div>
           </div>
         </aside>
         <div className="mt-14 rounded-sm border-black mb-2 pb-2 w-1/2 ">
           <h1 className="font-bold my-4">Today </h1>
-          <div className="grid grid-cols-2">
-            {transaction.map(() => (
-              <div key={item.id} className="flex font-bold gap-2">
-                <transactionIcon
-                  iconName={category.icon}
-                  color={category.color}
-                />
-                {item.amount}
+          <div className="bg-green-500 h-[400px] w-full grid grid-rows-3 gap-6">
+            <div className="gap-2 bg-blue-600">{transactions.name}</div>
+            <div className="gap-2 bg-blue-600">{transactions.amount}</div>
+            <div className="gap-2 bg-blue-800">{transactions.note}</div>
+            <Button variant="secondary">{createNewTransaction}</Button>
+          </div>
+
+          {/* <div className="grid grid-cols-3 bg-slate-">
+            {transactions.map((transaction) => (
+              <div
+                key={category.id}
+                className="flex font-bold gap-2 jusjify-between"
+              >
+                {transaction.name}
+                <div>{transaction.note}</div>
+                <div>{transaction.amount}</div>
+                <categoryIcon iconName={category.icon} color={category.color} />
+                <div className="grid grid-cols-6 gap-2 bg-white">
+                  {categoryIcons.map(({ name, Icon }) => (
+                    <div
+                      key={name}
+                      onClick={() => setIcon(name)}
+                      className={`flex items-center justify-center w-8 h-8 ${
+                        icon === name ? "bg-blue-200" : ""
+                      }`}
+                    >
+                      <Icon />
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
-          </div>
-          <HomebodySelect />
+          </div> */}
+          {/* <HomebodySelect /> */}
         </div>
       </div>
     </main>
@@ -516,7 +541,7 @@ export function CategoryIcon({ iconName, color }) {
 }
 
 export function DatePicker() {
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState("");
 
   return (
     <Popover>
@@ -558,4 +583,3 @@ export function DatePicker() {
     </Popover>
   );
 }
-

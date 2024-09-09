@@ -2,39 +2,38 @@ const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 const { sql } = require("../configs/database");
 
+async function createTransaction() {
+  const input = {
+    id: uuidv4(),
+    amount: 1033,
+    type: "EXPENSE",
+    payee: "Mmg",
+  };
 
-async function createTransaction({amount, type, date,payee,note}) {
-  const id = uuidv4();
   // await sql`insert into category (id, name) values (${id} ${name})`;
-  await sql`INSERT INTO transaction (amount, type, date,payee,note) VALUES (${amount}, ${type}, ${date},${payee}, ${note})`;
-  return id;
-}
-function createTransaction() {
-  const transactionList = sql`select * from transaction`;
-  return transactionList;
-}
-async function getOneTransaction(id) {
-  const transactionList = await sql`select * from transaction where id=${id}`;
-  if (transactionList.length) {
-    return transactionList[0];
-  }
-  return null;
-}
-async function deleteOneTransaction (id) {
-  await sql`delete from transaction where id=${id}`;
+  await sql`INSERT INTO transaction ${sql(input, Object.keys(input))}`;
+  return "";
 }
 
-async function updateOneTransaction(id, update) {
-  await sql`update transaction set name = ${update.amount}, type=${type}, date= ${date}, payee= ${payee},note= ${note}  where id=${id}`;
+async function getTransactions({ type, categoryId, before, payee }) {
+  let query = sql`select * from transaction where 1=1`;
+  if (type) {
+    query = `${query} and type=${type}`;
+  }
+  if (categoryId) {
+    query = `${query} and categoryId=${categoryId}`;
+  }
+  if (before) {
+    query = `${query} and date>${before}`;
+  }
+  if (payee) {
+    query = `${query} and payee=${payee}`;
+  }
+  const list = await query;
+  return list;
 }
+
 module.exports = {
   createTransaction,
-  createTransaction,
-  getOneTransaction,
-  deleteOneTransaction,
-  updateOneTransaction, 
+  getTransactions,
 };
-
-
-
-``
