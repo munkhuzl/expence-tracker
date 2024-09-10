@@ -482,12 +482,15 @@ export default function Page2() {
         </aside>
         <div className="mt-14 rounded-sm border-black mb-2 pb-2 w-1/2 ">
           <h1 className="font-bold my-4">Today </h1>
-          <div className="bg-green-500 h-[400px] w-full grid grid-rows-3 gap-6">
-            <div className="gap-2 bg-blue-600">{transactions.name}</div>
-            <div className="gap-2 bg-blue-600">{transactions.amount}</div>
-            <div className="gap-2 bg-blue-800">{transactions.note}</div>
+          {transactions.map((trans) => (
+          <div className="bg-green-500 h-[400px] w-full grid grid-rows-3 gap-6">  
+            <div className="gap-2 bg-blue-600">{trans.name} today</div>
+            <div className="gap-2 bg-blue-600">{trans.amount} mmn</div>
+            <div className="gap-2 bg-blue-800">{trans.note}</div>
             <Button variant="secondary">{createNewTransaction}</Button>
+       
           </div>
+                ) )}
 
           {/* <div className="grid grid-cols-3 bg-slate-">
             {transactions.map((transaction) => (
