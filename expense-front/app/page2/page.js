@@ -2,8 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-
 export function Page() {
     <>
         <div className="bg-slate-50 mx-auto mt-16">

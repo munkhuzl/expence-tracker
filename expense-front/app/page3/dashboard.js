@@ -4,9 +4,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Plus, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 export default function Dashboard() {
-
     return (
         <>
             <div className="mx-auto h-12 w-full bg-white flex justify-between items-center p-">
@@ -34,7 +32,6 @@ export default function Dashboard() {
 }
 
 function HomeBody() {
-
     return (
         <>
             <Card className="bg-teal-400">
